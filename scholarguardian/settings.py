@@ -74,10 +74,17 @@ WSGI_APPLICATION = 'scholarguardian.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/3.0/ref/settings/#databases
 
+
+
+
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
+        'ENGINE': 'django.db.backends.mysql',
+        'NAME': 'scolarguardian',
+        'USER': 'externo',
+        'PASSWORD': '0102261218',
+        'HOST': '201.163.99.83',
+        'PORT': '3307',
     }
 }
 
