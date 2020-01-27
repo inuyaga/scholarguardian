@@ -129,3 +129,4 @@ dmypy.json
 .pyre/
 env_scolargrdian/
 env_guardia/
+migrations/* !migrations/__init__.py
