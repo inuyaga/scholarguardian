@@ -1,11 +1,10 @@
 from django.db import models
-from app.usuario.models import Alumno, User
+from app.usuario.models import User
 # Create your models here.
 
 class Subcripcion(models.Model):
     sub_user=models.ForeignKey(User, verbose_name='Usuario', on_delete=models.CASCADE, null=False, blank=False)
     su_fecha_vencimiento=models.DateTimeField("Vencimiento subcripción")
-
 
 class Colegio(models.Model):
     col_nombre=models.CharField("Nombre de colegio", max_length=200, unique=True)
@@ -15,6 +14,26 @@ class Colegio(models.Model):
 
     def __str__(self):
         return self.col_nombre
+
+
+class Alumno(models.Model):
+    al_nombres=models.CharField('Nombre alumno',max_length=100)
+    al_apellidos=models.CharField('Apellidos',max_length=100)
+    al_foto=models.ImageField("Foto estuduante", upload_to="img/foto/estuduantes/",  null=True, blank=True)
+    al_correo=models.EmailField('Correo')
+    al_tutor=models.ForeignKey(User,verbose_name='Tutor de alumno', on_delete=models.CASCADE, null=True, blank=True)
+    al_colegio=models.ForeignKey(Colegio,verbose_name='Colegio al que pertenece', on_delete=models.CASCADE, null=True, blank=True)
+    al_huella=models.BinaryField("Huella digital", null=True, blank=True)
+    al_entrada_init=models.TimeField("Configuracion entrada inicial",  null=True, blank=True)
+    al_entrada_end=models.TimeField("Tolerancia entrada",  null=True, blank=True)
+    
+    al_salida_init=models.TimeField("Configuracion salida inicial",  null=True, blank=True)
+    al_dalida_end=models.TimeField("Tolerancia salida",  null=True, blank=True)
+
+    def __str__(self):
+        return "{} {}".format(self.al_nombres, self.al_apellidos)
+
+
 
 class Asistencia(models.Model):
     asis_user=models.ForeignKey(Alumno, verbose_name='Alumno', on_delete=models.CASCADE)
