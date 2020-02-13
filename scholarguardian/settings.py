@@ -38,6 +38,7 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'rest_framework', #<<-- aplicacion para crear apis
     'app.usuario',
     'app.ctrl_escolar',
 ]
@@ -55,6 +56,15 @@ MIDDLEWARE = [
 ]
 
 ROOT_URLCONF = 'scholarguardian.urls'
+
+
+REST_FRAMEWORK = {
+ 
+    'DEFAULT_PERMISSION_CLASSES': [
+        # 'rest_framework.permissions.DjangoModelPermissionsOrAnonReadOnly'
+        'rest_framework.permissions.AllowAny',
+    ]
+}
 
 TEMPLATES = [
     {
@@ -85,10 +95,10 @@ DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.mysql',
         'NAME': 'scolarguardian',
-        'USER': 'externo',
-        'PASSWORD': '0102261218',
-        'HOST': '201.163.99.83',
-        'PORT': '3307',
+        'USER': 'root',
+        'PASSWORD': '',
+        'HOST': 'localhost',
+        'PORT': '3306',
     }
 }
 
