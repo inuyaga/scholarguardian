@@ -44,4 +44,4 @@ class Asistencia(models.Model):
     asis_tipo_tiempo=models.IntegerField('Tipo de tiempo', choices=TIPO_TIEMPO)
 
     def __str__(self):
-        return self.col_nombre
+        return str(self.asis_user)

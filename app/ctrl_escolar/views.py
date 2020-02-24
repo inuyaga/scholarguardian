@@ -7,6 +7,7 @@ from django.views.generic import TemplateView
 
 from app.ctrl_escolar.models import Alumno
 from datetime import datetime, time, timedelta, date
+
 class CtrAsistenciaCreateList(viewsets.ModelViewSet):
     queryset = Asistencia.objects.all()
     serializer_class = AsistenciaSerializer 
