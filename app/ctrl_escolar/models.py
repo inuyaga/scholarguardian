@@ -38,7 +38,7 @@ class Alumno(models.Model):
 class Asistencia(models.Model):
     asis_user=models.ForeignKey(Alumno, verbose_name='Alumno', on_delete=models.CASCADE)
     asis_hra_evento=models.DateTimeField('Fecha y hora registrada', auto_now_add=True)
-    TIPO_EVENTO=((1, 'ENTRADA'), (2, 'SALIDA'))
+    TIPO_EVENTO=((1, 'Entrada'), (2, 'Salida'))
     asis_tipo_evento=models.IntegerField('Tipo de evento', choices=TIPO_EVENTO)
     TIPO_TIEMPO=((1, 'A tiempo'), (2, 'Tolerancia'), (3, 'Fuera de rango de horario'), (4, 'Antes de tiempo'))
     asis_tipo_tiempo=models.IntegerField('Tipo de tiempo', choices=TIPO_TIEMPO)

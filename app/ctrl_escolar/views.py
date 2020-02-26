@@ -10,7 +10,13 @@ from datetime import datetime, time, timedelta, date
 
 class CtrAsistenciaCreateList(viewsets.ModelViewSet):
     queryset = Asistencia.objects.all()
-    serializer_class = AsistenciaSerializer 
+    serializer_class = AsistenciaSerializer
+
+    # def get_queryset(self):
+        
+    #     return Asistencia.objects.filter(id=1)
+
+
 
     
     def create(self, request, *args, **kwargs):
