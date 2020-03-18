@@ -13,5 +13,6 @@ urlpatterns = [
     path('app/v1/app/register/', ctr_view.RegisterUser.as_view(), name='registro'), 
     path('app/v1/app/get/user/info/', ctr_view.GetUserInfo.as_view(), name='infouser'), 
     path('app/v1/app/get/alumnos/info/', ctr_view.GetHijoUser.as_view(), name='get_alu'), 
+    path('app/v1/app/get/alumnos/historia/eventos/', ctr_view.GetHistoryEventAlumn.as_view(), name='history_event'), 
 ]
 urlpatterns += router.urls

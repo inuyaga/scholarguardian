@@ -69,5 +69,24 @@ class AlumnoSerializer(serializers.ModelSerializer):
             'al_dalida_end',
         ]
 
+class GetHistoryEventAlumnSerializer(serializers.ModelSerializer):
+    # al_colegio = serializers.StringRelatedField()
+    asis_tipo_evento = serializers.CharField(source='get_asis_tipo_evento_display')
+    asis_tipo_tiempo = serializers.CharField(source='get_asis_tipo_tiempo_display')
+    # asis_hra_evento = HoraFormat1n8(read_only=True)
+    asis_hra_evento = serializers.DateTimeField(format='%Y-%m-%d %H:%M:%S')
+    
+    asis_user = serializers.StringRelatedField()
+    
+    class Meta:
+        model = Asistencia
+        fields = [
+            'id',
+            'asis_user',
+            'asis_hra_evento',
+            'asis_tipo_evento',
+            'asis_tipo_tiempo',
+        ]
+
 
 

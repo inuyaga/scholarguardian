@@ -1,14 +1,14 @@
 from rest_framework.response import Response
-from app.ctrl_escolar.serializers import AsistenciaSerializer, UserRegisterSerializer, AlumnoSerializer
+from app.ctrl_escolar.serializers import AsistenciaSerializer, UserRegisterSerializer, AlumnoSerializer, GetHistoryEventAlumnSerializer
 
 from rest_framework.views import APIView
 from rest_framework.permissions import IsAuthenticated
 
 from rest_framework import status, viewsets
-from app.ctrl_escolar.models import Asistencia
 from django.views.generic import TemplateView
 
-from app.ctrl_escolar.models import Alumno
+
+from app.ctrl_escolar.models import Alumno, Asistencia
 from app.usuario.models import User
 from datetime import datetime, time, timedelta, date
 from rest_framework import generics
@@ -138,6 +138,18 @@ class GetHijoUser(generics.ListCreateAPIView):
     def get_queryset(self):
         queryset = super().get_queryset()
         queryset = queryset.filter(al_tutor=self.request.user)
+        return queryset
+
+class GetHistoryEventAlumn(generics.ListCreateAPIView):
+    authentication_classes = [TokenAuthentication]
+    permission_classes = [IsAuthenticated] 
+
+    queryset = Asistencia.objects.all()
+    serializer_class = GetHistoryEventAlumnSerializer
+
+    def get_queryset(self):
+        queryset = super().get_queryset()
+        queryset = queryset.filter(asis_user__al_tutor=self.request.user).order_by('-id')
         return queryset
 
 
