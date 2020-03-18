@@ -1,23 +1,37 @@
 from rest_framework.response import Response
-from app.ctrl_escolar.serializers import AsistenciaSerializer
+from app.ctrl_escolar.serializers import AsistenciaSerializer, UserRegisterSerializer, AlumnoSerializer
+
 from rest_framework.views import APIView
+from rest_framework.permissions import IsAuthenticated
+
 from rest_framework import status, viewsets
 from app.ctrl_escolar.models import Asistencia
 from django.views.generic import TemplateView
 
 from app.ctrl_escolar.models import Alumno
+from app.usuario.models import User
 from datetime import datetime, time, timedelta, date
+from rest_framework import generics
+
+from rest_framework.authentication import TokenAuthentication
+from django.core import serializers
+
+from django.utils.formats import localize
+class RegisterUser(generics.CreateAPIView):
+    queryset = Asistencia.objects.all()
+    serializer_class = UserRegisterSerializer
+
+    # def create(self, request, *args, **kewargs)
+    #     serializer = self.get_serializer(data=request.data)
+    #     serializer.is_valid(raise_exception=True)
+    #     self.perform_create(serializer)
+    #     headers = self.get_success_headers(serializer.data)
+    #     return Response(serializer.data, status=status.HTTP_201_CREATED, headers=headers)
+    
 
 class CtrAsistenciaCreateList(viewsets.ModelViewSet):
-    queryset = Asistencia.objects.all()
+    queryset = User.objects.all()
     serializer_class = AsistenciaSerializer
-
-    # def get_queryset(self):
-        
-    #     return Asistencia.objects.filter(id=1)
-
-
-
     
     def create(self, request, *args, **kwargs):
 
@@ -62,5 +76,71 @@ class CtrAsistenciaCreateList(viewsets.ModelViewSet):
 
 class vistaprueba(TemplateView):
     template_name = "contenido.html"
+
+
+
+
+class LoginAppScholar(APIView):
+    def post(self, request):
+        bdy = request.body
+        print(bdy)
+        content = {
+            'message': 'Hello, World!',
+            'contenido':bdy
+            }
+        return Response(content)
+
+    def get(self, request):
+        content = {
+            'message': 'Hello, World!',
+            }
+        return Response(content)
+
+
+class GetUserInfo(APIView):
+    authentication_classes = [TokenAuthentication]
+    permission_classes = [IsAuthenticated]
+    
+    # def post(self, request):
+    #     bdy = request.body
+    #     print(bdy)
+    #     content = {
+    #         'message': 'Hello, World!',
+    #         'contenido':bdy
+    #         }
+    #     return Response(content)
+    
+
+    
+    def get(self, request):
+        user = User.objects.get(username=request.user)
+        photo = user.foto_perfil.url  if  user.foto_perfil != "" else "no"
+        content = {
+            'username': user.username,
+            'first_name': user.first_name,
+            'last_name': user.last_name,
+            'foto_perfil': photo,
+            'email': user.email,
+            'fecha_nacimiento': localize(user.fecha_nacimiento),
+            'telefono': str(user.telefono),
+            }
+        return Response(content)
+
+
+
+class GetHijoUser(generics.ListCreateAPIView):
+    authentication_classes = [TokenAuthentication]
+    permission_classes = [IsAuthenticated] 
+
+    queryset = Alumno.objects.all()
+    serializer_class = AlumnoSerializer
+
+    def get_queryset(self):
+        queryset = super().get_queryset()
+        queryset = queryset.filter(al_tutor=self.request.user)
+        return queryset
+
+
+   
 
 

@@ -1,7 +1,7 @@
 from django.contrib import admin
 from app.usuario.models import User
 # Register your models here.
-from app.ctrl_escolar.models import Alumno, Asistencia
+from app.ctrl_escolar.models import Alumno, Asistencia, Colegio
 
 class AsistenciaConfig(admin.ModelAdmin):
     list_display = [
@@ -10,6 +10,7 @@ class AsistenciaConfig(admin.ModelAdmin):
         'asis_tipo_evento',
         'asis_tipo_tiempo',
     ]
-admin.site.register(Alumno)
+admin.site.register(Alumno) 
 admin.site.register(User)
 admin.site.register(Asistencia, AsistenciaConfig)
+admin.site.register(Colegio)

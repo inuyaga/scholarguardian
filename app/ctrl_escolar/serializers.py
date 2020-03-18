@@ -1,5 +1,6 @@
 from rest_framework import serializers
 from app.ctrl_escolar.models import Asistencia, Alumno
+from app.usuario.models import User
 from django.utils.formats import localize
 
 class HoraFormat1n8(serializers.RelatedField):
@@ -13,6 +14,23 @@ class AlumnoSerializer(serializers.HyperlinkedModelSerializer):
         model = Alumno
         fields = ['id', 'al_nombres',  'al_apellidos', 'al_correo', 'al_colegio']
         # read_only_fields = ('id',)
+
+class UserRegisterSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = User
+        fields = [
+            'first_name',  
+            'last_name', 
+            'username', 
+            'email',
+            'password', 
+            ]
+    def create(self, validated_data):
+        password = validated_data.pop('password')
+        user = User(**validated_data)
+        user.set_password(password)
+        user.save()
+        return user
 
 class AsistenciaSerializer(serializers.ModelSerializer):
 
@@ -32,5 +50,24 @@ class AsistenciaSerializer(serializers.ModelSerializer):
         fields = ['id',  'asis_user', 'asis_tipo_evento', 'asis_tipo_tiempo', 'asis_hra_evento']
         read_only_fields = ('id',)
    
+
+
+class AlumnoSerializer(serializers.ModelSerializer):
+    al_colegio = serializers.StringRelatedField()
+    class Meta:
+        model = Alumno
+        fields = [
+            'id',
+            'al_nombres',
+            'al_apellidos',
+            'al_foto',
+            'al_correo',
+            'al_colegio',
+            'al_entrada_init',
+            'al_entrada_end',
+            'al_salida_init',
+            'al_dalida_end',
+        ]
+
 
 
