@@ -74,7 +74,7 @@ class GetHistoryEventAlumnSerializer(serializers.ModelSerializer):
     asis_tipo_evento = serializers.CharField(source='get_asis_tipo_evento_display')
     asis_tipo_tiempo = serializers.CharField(source='get_asis_tipo_tiempo_display')
     # asis_hra_evento = HoraFormat1n8(read_only=True)
-    asis_hra_evento = serializers.DateTimeField(format='%Y-%m-%d %H:%M:%S')
+    asis_hra_evento = serializers.DateTimeField(format='%H:%M:%Shrs %d/%m/%Y')
     
     asis_user = serializers.StringRelatedField()
     

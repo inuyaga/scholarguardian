@@ -150,7 +150,7 @@ class GetHistoryEventAlumn(generics.ListCreateAPIView):
     def get_queryset(self):
         queryset = super().get_queryset()
         queryset = queryset.filter(asis_user__al_tutor=self.request.user).order_by('-id')
-        return queryset
+        return queryset 
 
 
    
