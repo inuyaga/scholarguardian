@@ -3,6 +3,11 @@ from app.ctrl_escolar.models import Asistencia, Alumno
 from app.usuario.models import User
 from django.utils.formats import localize
 
+
+
+
+
+
 class HoraFormat1n8(serializers.RelatedField):
     def to_representation(self, value):
         hora = localize(value)
@@ -87,6 +92,27 @@ class GetHistoryEventAlumnSerializer(serializers.ModelSerializer):
             'asis_tipo_evento',
             'asis_tipo_tiempo',
         ]
+
+
+class AlumnoChildSerializer(serializers.ModelSerializer):
+    
+    class Meta:
+        model = Alumno
+        fields = [
+            'al_nombres',
+            'al_apellidos',
+            'al_foto',
+            'al_correo',
+            'al_tutor',
+            'al_colegio',
+            'al_entrada_init',
+            'al_entrada_end',
+            'al_salida_init',
+            'al_dalida_end',
+        ]
+    
+    
+
 
 
 

@@ -1,6 +1,14 @@
 from rest_framework.response import Response
-from app.ctrl_escolar.serializers import AsistenciaSerializer, UserRegisterSerializer, AlumnoSerializer, GetHistoryEventAlumnSerializer
-
+from app.ctrl_escolar.serializers import (
+    AsistenciaSerializer, 
+    UserRegisterSerializer, 
+    AlumnoSerializer, 
+    GetHistoryEventAlumnSerializer,
+    AlumnoChildSerializer
+    )
+import base64
+from PIL import Image
+import io
 from rest_framework.views import APIView
 from rest_framework.permissions import IsAuthenticated
 
@@ -131,7 +139,6 @@ class GetUserInfo(APIView):
 class GetHijoUser(generics.ListCreateAPIView):
     authentication_classes = [TokenAuthentication]
     permission_classes = [IsAuthenticated] 
-
     queryset = Alumno.objects.all()
     serializer_class = AlumnoSerializer
 
@@ -139,6 +146,34 @@ class GetHijoUser(generics.ListCreateAPIView):
         queryset = super().get_queryset()
         queryset = queryset.filter(al_tutor=self.request.user)
         return queryset
+
+class AddAlumnoHijo(generics.CreateAPIView):
+    authentication_classes = [TokenAuthentication]
+    permission_classes = [IsAuthenticated] 
+    serializer_class = AlumnoChildSerializer
+    queryset = Alumno.objects.all()
+    def create(self, request, *args, **kwargs):
+        from django.core.files.base import ContentFile
+        from base64 import b64decode
+        request.data._mutable = True
+
+        image_data = b64decode(request.data['al_foto'])
+
+        request.data['al_entrada_init']=datetime.strptime(request.data['al_entrada_init'], '%Y-%m-%d %H:%M:%S.%f').time()
+        request.data['al_entrada_end']=datetime.strptime(request.data['al_entrada_end'], '%Y-%m-%d %H:%M:%S.%f').time()
+        request.data['al_salida_init']=datetime.strptime(request.data['al_salida_init'], '%Y-%m-%d %H:%M:%S.%f').time()
+        request.data['al_dalida_end']=datetime.strptime(request.data['al_dalida_end'], '%Y-%m-%d %H:%M:%S.%f').time()
+        request.data['al_tutor']=request.user.id
+        request.data['al_foto']=ContentFile(image_data, 'whatup.png')
+        
+
+
+        serializer = self.get_serializer(data=request.data)
+        serializer.is_valid(raise_exception=True)
+        self.perform_create(serializer)
+        headers = self.get_success_headers(serializer.data)
+        return Response(serializer.data, status=status.HTTP_201_CREATED, headers=headers)
+
 
 class GetHistoryEventAlumn(generics.ListCreateAPIView):
     authentication_classes = [TokenAuthentication]
