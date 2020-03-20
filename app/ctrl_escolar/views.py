@@ -4,7 +4,8 @@ from app.ctrl_escolar.serializers import (
     UserRegisterSerializer, 
     AlumnoSerializer, 
     GetHistoryEventAlumnSerializer,
-    AlumnoChildSerializer
+    AlumnoChildSerializer,
+    GetColegiosEstudiosSerializer
     )
 import base64
 from PIL import Image
@@ -16,7 +17,7 @@ from rest_framework import status, viewsets
 from django.views.generic import TemplateView
 
 
-from app.ctrl_escolar.models import Alumno, Asistencia
+from app.ctrl_escolar.models import Alumno, Asistencia, Colegio
 from app.usuario.models import User
 from datetime import datetime, time, timedelta, date
 from rest_framework import generics
@@ -189,5 +190,10 @@ class GetHistoryEventAlumn(generics.ListCreateAPIView):
 
 
    
+class GetColegiosEstudios(generics.ListAPIView):
+    authentication_classes = [TokenAuthentication]
+    permission_classes = [IsAuthenticated] 
+    queryset = Colegio.objects.all()
+    serializer_class = GetColegiosEstudiosSerializer
 
 

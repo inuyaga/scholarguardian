@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from app.ctrl_escolar.models import Asistencia, Alumno
+from app.ctrl_escolar.models import Asistencia, Alumno, Colegio
 from app.usuario.models import User
 from django.utils.formats import localize
 
@@ -109,6 +109,18 @@ class AlumnoChildSerializer(serializers.ModelSerializer):
             'al_entrada_end',
             'al_salida_init',
             'al_dalida_end',
+        ]
+
+
+class GetColegiosEstudiosSerializer(serializers.ModelSerializer):
+    
+    class Meta:
+        model = Colegio
+        fields = [
+            'id',
+            'col_nombre',
+            'col_direccion',
+            'col_logo',
         ]
     
     
