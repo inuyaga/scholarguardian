@@ -29,7 +29,25 @@ class AlumnoConfig(admin.ModelAdmin):
         'al_salida_init',
         'al_dalida_end',
     ]
+
+
+
+
+
+
+
 admin.site.register(Alumno, AlumnoConfig) 
-admin.site.register(User)
 admin.site.register(Asistencia, AsistenciaConfig)
 admin.site.register(Colegio, ColegioConfig)
+
+
+
+
+
+
+
+
+
+
+
+

@@ -54,6 +54,11 @@ class AsistenciaSerializer(serializers.ModelSerializer):
         model = Asistencia
         fields = ['id',  'asis_user', 'asis_tipo_evento', 'asis_tipo_tiempo', 'asis_hra_evento']
         read_only_fields = ('id',)
+class AsistenciaCreateSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Asistencia
+        fields = ['id',  'asis_user', 'asis_tipo_evento', 'asis_tipo_tiempo', 'asis_hra_evento']
+        read_only_fields = ('id',)
    
 
 

@@ -1,12 +1,5 @@
 from rest_framework.response import Response
-from app.ctrl_escolar.serializers import (
-    AsistenciaSerializer, 
-    UserRegisterSerializer, 
-    AlumnoSerializer, 
-    GetHistoryEventAlumnSerializer,
-    AlumnoChildSerializer,
-    GetColegiosEstudiosSerializer
-    )
+from app.ctrl_escolar.serializers import *
 import base64
 from PIL import Image
 import io
@@ -40,7 +33,7 @@ class RegisterUser(generics.CreateAPIView):
 
 class CtrAsistenciaCreateList(viewsets.ModelViewSet):
     queryset = User.objects.all()
-    serializer_class = AsistenciaSerializer
+    serializer_class = AsistenciaCreateSerializer
     
     def create(self, request, *args, **kwargs):
 
