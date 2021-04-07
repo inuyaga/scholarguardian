@@ -1,24 +1,45 @@
 from rest_framework.response import Response
-from app.ctrl_escolar.serializers import *
-import base64
-from PIL import Image
-import io
 from rest_framework.views import APIView
 from rest_framework.permissions import IsAuthenticated
-
+from rest_framework import generics
 from rest_framework import status, viewsets
+
 from django.views.generic import TemplateView
+from django.core import serializers
+from django.utils.formats import localize
 
-
+from app.ctrl_escolar.serializers import *
 from app.ctrl_escolar.models import Alumno, Asistencia, Colegio
 from app.usuario.models import User
 from datetime import datetime, time, timedelta, date
-from rest_framework import generics
 
 from rest_framework.authentication import TokenAuthentication
-from django.core import serializers
+from rest_framework.authtoken.views import ObtainAuthToken
+from rest_framework.authtoken.models import Token
 
-from django.utils.formats import localize
+import base64
+from PIL import Image
+import io
+
+from django.core.files.base import ContentFile
+from base64 import b64decode
+
+
+class AutenticacionUser(ObtainAuthToken):
+    def post(self, request, *args, **kwargs):
+        serializer = self.serializer_class(data=request.data, context={'request': request})
+        serializer.is_valid(raise_exception=True)
+        user = serializer.validated_data['user']
+        token, created = Token.objects.get_or_create(user=user)       
+        serializerUser = UserSerializer(user) 
+        data = {
+            'token': token.key,             
+            'usuario':serializerUser.data,
+        }
+        return Response(data)
+
+
+
 class RegisterUser(generics.CreateAPIView):
     queryset = Asistencia.objects.all()
     serializer_class = UserRegisterSerializer
@@ -146,9 +167,7 @@ class AddAlumnoHijo(generics.CreateAPIView):
     permission_classes = [IsAuthenticated] 
     serializer_class = AlumnoChildSerializer
     queryset = Alumno.objects.all()
-    def create(self, request, *args, **kwargs):
-        from django.core.files.base import ContentFile
-        from base64 import b64decode
+    def create(self, request, *args, **kwargs):        
         request.data._mutable = True
 
         image_data = b64decode(request.data['al_foto'])
@@ -167,6 +186,24 @@ class AddAlumnoHijo(generics.CreateAPIView):
         self.perform_create(serializer)
         headers = self.get_success_headers(serializer.data)
         return Response(serializer.data, status=status.HTTP_201_CREATED, headers=headers)
+
+
+class UsuarioUpdateAppi(generics.UpdateAPIView):
+    authentication_classes = [TokenAuthentication]
+    permission_classes = [IsAuthenticated] 
+    serializer_class = UserSerializerUpdate 
+    queryset = User.objects.all()
+    def update(self, request, *args, **kwargs):        
+        request.data._mutable = True
+        image_data = b64decode(request.data['foto_perfil'])        
+        request.data['foto_perfil']=ContentFile(image_data, 'user.png')
+        instance = self.get_object()
+        
+
+        serializer = self.serializer_class(instance, data=request.data)
+        serializer.is_valid(raise_exception=True)                
+        headers = self.perform_update(serializer)
+        return Response(serializer.data, status=status.HTTP_202_ACCEPTED, headers=headers)
 
 
 class GetHistoryEventAlumn(generics.ListCreateAPIView):

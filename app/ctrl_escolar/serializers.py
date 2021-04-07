@@ -127,9 +127,31 @@ class GetColegiosEstudiosSerializer(serializers.ModelSerializer):
             'col_direccion',
             'col_logo',
         ]
+
+
+
     
-    
+
+
+class UserSerializerUpdate(serializers.ModelSerializer):
+    fecha_nacimiento = serializers.DateField(format="%d-%m-%Y")
+    class Meta:
+        model = User
+        fields = [
+            'first_name',  
+            'last_name', 
+            'email',
+            'foto_perfil', 
+            'fecha_nacimiento', 
+            'telefono', 
+            ]
+   
 
 
 
 
+class UserSerializer(serializers.ModelSerializer):
+    tipo_user = serializers.CharField(source='get_tipo_user_display')
+    class Meta:
+        model = User
+        fields = ['id', 'username', 'first_name', 'last_name', 'email', 'foto_perfil', 'fecha_nacimiento', 'telefono', 'tipo_user']
